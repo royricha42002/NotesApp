@@ -18,7 +18,7 @@ const Signup = () => {
     console.log("Submitting form with data:", formData);
 
     try {
-      const response = await axios.post(`http://localhost:5173/signup`, formData);
+      const response = await axios.post('http://localhost:5173/signup', formData);
       console.log(response.data);
       alert('User registered successfully');
     } catch (err) {
