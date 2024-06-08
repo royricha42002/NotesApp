@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Signup = () => {
@@ -8,6 +8,7 @@ const Signup = () => {
     email: '',
     password: ''
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -18,9 +19,10 @@ const Signup = () => {
     console.log("Submitting form with data:", formData);
 
     try {
-      const response = await axios.post('http://localhost:5173/signup', formData);
+      const response = await axios.post('http://localhost:8000/signup', formData);
       console.log(response.data);
       alert('User registered successfully');
+      navigate('/login');
     } catch (err) {
       console.error(`Error: ${err.response ? err.response.data.error : err.message}`);
       alert(`Error registering user: ${err.response ? err.response.data.error : err.message}`);

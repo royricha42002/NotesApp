@@ -1,12 +1,40 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting form with data:", formData);
+
+    try {
+      const response = await axios.post('http://localhost:8000/login', formData);
+      console.log(response.data);
+      alert('Login successful');
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(`Error logging in: ${err.response ? err.response.data.error : err.message}`);
+      setError(err.response ? err.response.data.error : err.message);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-[#B0BEC5]">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
+          {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
             <label htmlFor="email" className="block font-medium mb-2">
               Email
@@ -16,6 +44,8 @@ const Login = () => {
               id="email"
               className="border border-gray-300 px-3 py-2 rounded-md w-full"
               placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -27,9 +57,11 @@ const Login = () => {
               id="password"
               className="border border-gray-300 px-3 py-2 rounded-md w-full"
               placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
-          <button className="bg-[#FF7F50] text-white font-bold py-2 px-4 rounded-md w-full">
+          <button type="submit" className="bg-[#FF7F50] text-white font-bold py-2 px-4 rounded-md w-full">
             Login
           </button>
         </form>
