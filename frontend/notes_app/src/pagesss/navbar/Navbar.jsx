@@ -18,8 +18,9 @@ const Navbar = () => {
 
   const fetchUserName = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/getUsers'); // Adjust this to the correct endpoint if needed
+      const response = await axios.get('http://localhost:8000/getUsers','a@gmail.com'); // Adjust this to the correct endpoint if needed
       const user = response.data.find(user => user.email === localStorage.getItem('email'));
+      console.log(localStorage.getItem('email'));
       setUserName(user ? user.name : 'Unknown User');
     } catch (error) {
       console.error('Error fetching user data:', error);

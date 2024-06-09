@@ -22,6 +22,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:8000/login', formData);
       console.log(response.data);
       alert('Login successful');
+      localStorage.setItem('email',formData.email);
       navigate('/dashboard');
     } catch (err) {
       console.error(`Error logging in: ${err.response ? err.response.data.error : err.message}`);

@@ -69,6 +69,7 @@ app.post("/login", async (req, res) => {
   
     try {
       const user = await userModel.findOne({ email });
+      console.log(user);
       if (!user) {
         return res.status(400).json({ error: "Invalid email or password" });
       }
@@ -88,7 +89,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/getUsers", async (req, res) => {
   try {
-    const userData = await userModel.find();
+    const userData = await userModel.findOne();
     console.log(userData);
     res.json(userData);
   } catch (err) {
