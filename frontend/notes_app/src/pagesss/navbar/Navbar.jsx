@@ -3,23 +3,25 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoggedIn(['/login', '/signup', '/dashboard'].includes(location.pathname));
-    if (location.pathname === '/dashboard') {
-      fetchUserName();
+    const userId = localStorage.getItem('userId');
+    setIsLoggedIn(!!userId);
+    if (userId) {
+      fetchUserName(userId);
     }
   }, [location]);
 
-  const fetchUserName = async () => {
+  const fetchUserName = async (userId) => {
     try {
-      const response = await axios.get('http://localhost:8000/getUsers'); // Adjust this to the correct endpoint if needed
-      const user = response.data.find(user => user.email === localStorage.getItem('email'));
+      const response = await axios.get(`http://localhost:8000/getUsers/${userId}`);
+      const user = response.data;
       setUserName(user ? user.name : 'Unknown User');
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -45,8 +47,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    // Perform logout logic here
-    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
+    setIsLoggedIn(false);
     navigate('/');
   };
 

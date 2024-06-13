@@ -1,5 +1,5 @@
-// Dashboard.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = ({ user }) => {
   const [notes, setNotes] = useState([]);
@@ -10,43 +10,87 @@ const Dashboard = ({ user }) => {
   const [noteBody, setNoteBody] = useState('');
   const [viewingNote, setViewingNote] = useState(null);
 
+  useEffect(() => {
+    if (user && user._id) {
+      fetchNotes();
+    }
+  }, [user]);
+
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/notes/${user._id}`);
+      setNotes(response.data);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
   const handleAddNoteClick = () => {
     setIsAddingNote(true);
     setIsEditingNote(null);
     setViewingNote(null);
   };
 
-  const handleNoteSubmit = () => {
+  const handleNoteSubmit = async () => {
     const newNote = {
-      id: Date.now(),
       title: noteTitle,
       description: noteDescription,
       body: noteBody,
     };
-    setNotes([...notes, newNote]);
-    setIsAddingNote(false);
-    setNoteTitle('');
-    setNoteDescription('');
-    setNoteBody('');
+
+    // if (!noteTitle || !noteDescription || !noteBody) {
+    //   console.error("All fields are required");
+    //   return;
+    // }
+
+    try {
+      const response = await axios.post('http://localhost:8000/notes', newNote, {
+        headers: {
+          'user-id': user._id
+        }
+      });
+      setNotes([...notes, response.data]);
+      setIsAddingNote(false);
+      setNoteTitle('');
+      setNoteDescription('');
+      setNoteBody('');
+    } catch (error) {
+      console.error("Error adding note:", error);
+    }
   };
 
   const handleEditClick = (note) => {
-    setIsEditingNote(note.id);
+    setIsEditingNote(note._id);
     setNoteTitle(note.title);
     setNoteDescription(note.description);
     setNoteBody(note.body);
   };
 
-  const handleEditSubmit = (id) => {
-    setNotes(notes.map(note => note.id === id ? { ...note, title: noteTitle, description: noteDescription, body: noteBody } : note));
-    setIsEditingNote(null);
-    setNoteTitle('');
-    setNoteDescription('');
-    setNoteBody('');
+  const handleEditSubmit = async (id) => {
+    const updatedNote = {
+      title: noteTitle,
+      description: noteDescription,
+      body: noteBody,
+    };
+    try {
+      const response = await axios.put(`http://localhost:8000/notes/${id}`, updatedNote);
+      setNotes(notes.map(note => note._id === id ? response.data : note));
+      setIsEditingNote(null);
+      setNoteTitle('');
+      setNoteDescription('');
+      setNoteBody('');
+    } catch (error) {
+      console.error("Error updating note:", error);
+    }
   };
 
-  const handleDeleteClick = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
+  const handleDeleteClick = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/notes/${id}`);
+      setNotes(notes.filter(note => note._id !== id));
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
   const handleCancelClick = () => {
@@ -174,28 +218,38 @@ const Dashboard = ({ user }) => {
               >
                 Edit
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <ul>
+        {notes.map(note => (
+          <li key={note._id} className="border border-gray-300 p-2 mb-2 rounded-md">
+            <h3 className="text-xl font-bold">{note.title}</h3>
+            <p>{note.description}</p>
+            <div className="flex justify-end space-x-2">
               <button
-                onClick={() => handleDeleteClick(viewingNote.id)}
+                onClick={() => handleViewClick(note)}
+                className="bg-gray-500 text-white p-2 rounded-md"
+              >
+                View
+              </button>
+              <button
+                onClick={() => handleEditClick(note)}
+                className="bg-yellow-500 text-white p-2 rounded-md"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDeleteClick(note._id)}
                 className="bg-red-500 text-white p-2 rounded-md"
               >
                 Delete
               </button>
             </div>
-          </div>
-        </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {notes.map(note => (
-          <div
-            key={note.id}
-            className="p-4 border border-gray-300 rounded-md cursor-pointer"
-            onClick={() => handleViewClick(note)}
-          >
-            <h2 className="text-lg font-bold mb-2">{note.title}</h2>
-            <p>{note.description}</p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

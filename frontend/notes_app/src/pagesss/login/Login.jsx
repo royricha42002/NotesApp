@@ -7,7 +7,6 @@ const Login = () => {
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,12 +19,13 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:8000/login', formData);
-      console.log(response.data);
+      const userId = response.data.user.userId;
+      localStorage.setItem('userId', userId); // Store userId in localStorage
       alert('Login successful');
-      navigate('/dashboard');
+      navigate(`/dashboard/${userId}`);
     } catch (err) {
       console.error(`Error logging in: ${err.response ? err.response.data.error : err.message}`);
-      setError(err.response ? err.response.data.error : err.message);
+      alert(`Error logging in: ${err.response ? err.response.data.error : err.message}`);
     }
   };
 
@@ -34,7 +34,6 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
-          {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
             <label htmlFor="email" className="block font-medium mb-2">
               Email

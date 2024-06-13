@@ -25,7 +25,7 @@ const AppRoutes = () => (
           <StartTakingNotesSection id="start-noting-section" />
         </div>
       } />
-      <Route path="/dashboard" element={<Dashboard user={user} />} />
+      <Route path="/dashboard/:userId" element={<Dashboard user={user} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     </Routes>
