@@ -1,5 +1,3 @@
-// index.js
-
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -101,6 +99,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/getUsers", async (req, res) => {
   try {
+    console.log("Invoked /getUsers");
     const userData = await userModel.find();
     console.log(userData);
     res.json(userData);
@@ -126,6 +125,7 @@ app.get("/notes/:userId", async (req, res) => {
 app.post("/notes", async (req, res) => {
   const { title, description, body } = req.body;
   const userId = req.headers['user-id']; // Assuming user ID is sent in headers
+  console.log("LoggedIn userId "+userId);
 
   if (!userId || !title || !description || !body) {
     return res.status(400).json({ error: "All fields are required" });
@@ -167,10 +167,12 @@ app.delete("/notes/:id", async (req, res) => {
 });
 
 app.get('/getUsers/:userId', async (req, res) => {
-  const { userId } = req.params;
-  
+
+  const  userId  = req.params.userId;
+  console.log("loggedIn userId : "+userId);
   try {
-    const user = await User.findById(userId);
+    const user = await userModel.findOne({userId});
+    console.log("Fetched data : "+ user);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -180,4 +182,3 @@ app.get('/getUsers/:userId', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
