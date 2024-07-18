@@ -11,14 +11,15 @@ const Dashboard = ({ user }) => {
   const [viewingNote, setViewingNote] = useState(null);
 
   useEffect(() => {
-    if (user && user._id) {
-      fetchNotes();
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      fetchNotes(userId);
     }
-  }, [user]);
+  }, []);
 
-  const fetchNotes = async () => {
+  const fetchNotes = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/notes/${user._id}`);
+      const response = await axios.get(`http://localhost:8000/notes/${userId}`);
       setNotes(response.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -38,15 +39,10 @@ const Dashboard = ({ user }) => {
       body: noteBody,
     };
 
-    // if (!noteTitle || !noteDescription || !noteBody) {
-    //   console.error("All fields are required");
-    //   return;
-    // }
-
     try {
       const response = await axios.post('http://localhost:8000/notes', newNote, {
         headers: {
-          'user-id': user._id
+          'user-id': localStorage.getItem('userId')
         }
       });
       setNotes([...notes, response.data]);
@@ -107,12 +103,12 @@ const Dashboard = ({ user }) => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-      <div className="flex justify-end">
+    <div className="p-4 font-mono">
+      <div className="flex flex-row justify-between mb-4">
+        <h1 className="text-xl font-bold mb-4 font-mono">Click the plus button</h1>
         <button
           onClick={handleAddNoteClick}
-          className="bg-blue-500 text-white p-2 rounded-full"
+          className="bg-gray-500 text-white p-2 rounded-full"
         >
           <span className="text-xl">+</span>
         </button>
@@ -222,34 +218,35 @@ const Dashboard = ({ user }) => {
           </div>
         </div>
       )}
-      <ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {notes.map(note => (
-          <li key={note._id} className="border border-gray-300 p-2 mb-2 rounded-md">
+          <div key={note._id} className="bg-[#facbc7] p-4 rounded-lg border border-gray-300">
             <h3 className="text-xl font-bold">{note.title}</h3>
-            <p>{note.description}</p>
+            <p className="mb-2">{note.description}</p>
+            <p>{note.body}</p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => handleViewClick(note)}
-                className="bg-gray-500 text-white p-2 rounded-md"
+                className="bg-transparent border border-gray-500  text-gray-500 font-semibold p-2 rounded-md hover:text-[#facbc7] hover:bg-gray-500"
               >
                 View
               </button>
               <button
                 onClick={() => handleEditClick(note)}
-                className="bg-yellow-500 text-white p-2 rounded-md"
+                className="bg-transparent border border-gray-500  text-gray-500 font-semibold p-2 rounded-md hover:text-[#facbc7] hover:bg-gray-500"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDeleteClick(note._id)}
-                className="bg-red-500 text-white p-2 rounded-md"
+                className="bg-transparent border border-gray-500  text-gray-500 font-semibold p-2 rounded-md hover:text-[#facbc7] hover:bg-gray-500"
               >
                 Delete
               </button>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

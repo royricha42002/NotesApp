@@ -15,7 +15,7 @@ const user = {
 };
 
 const AppRoutes = () => (
-  <Router>
+  <Router >
     <Navbar user={user} />
     <Routes>
       <Route path="/" element={

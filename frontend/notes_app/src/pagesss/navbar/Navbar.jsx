@@ -68,7 +68,7 @@ const Navbar = () => {
             </button>
             <button
               className="inline-flex items-center px-4 py-2 border border-[#455A64] font-semibold text-[#455A64] rounded-md hover:bg-[#455A64] hover:border-[#455A64] hover:text-[#f1b1ab] focus:outline-none focus:ring-2 focus:ring-offset-2"
-              onClick={() => scrollToSection('start-noting-section')}
+              onClick={() => navigate('/login')}
             >
               Start Noting
             </button>
@@ -143,7 +143,7 @@ const Navbar = () => {
                 <button
                   className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium text-gray-800 rounded-md hover:bg-gray-200 hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
                   onClick={() => {
-                    scrollToSection('start-noting-section');
+                    navigate('/login');
                     toggleMenu();
                   }}
                 >
