@@ -17,7 +17,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/notesapp", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_ATLAS, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log(`DB Connected at ${PORT}`);
     app.listen(PORT, () => {
