@@ -18,7 +18,7 @@ const Login = () => {
     console.log("Submitting form with data:", formData);
 
     try {
-      const response = await axios.post('http://localhost:8000/login', formData);
+      const response = await axios.post('https://notesapp-3qhd.onrender.com/login', formData);
       const userId = response.data.user.userId;
       localStorage.setItem('userId', userId); // Store userId in localStorage
       alert('Login successful');
