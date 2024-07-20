@@ -19,7 +19,7 @@ const Dashboard = ({ user }) => {
 
   const fetchNotes = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/notes/${userId}`);
+      const response = await axios.get(`https://notesapp-3qhd.onrender.com/notes/${userId}`);
       setNotes(response.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -40,7 +40,7 @@ const Dashboard = ({ user }) => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/notes', newNote, {
+      const response = await axios.post('https://notesapp-3qhd.onrender.com/notes', newNote, {
         headers: {
           'user-id': localStorage.getItem('userId')
         }
@@ -69,7 +69,7 @@ const Dashboard = ({ user }) => {
       body: noteBody,
     };
     try {
-      const response = await axios.put(`http://localhost:8000/notes/${id}`, updatedNote);
+      const response = await axios.put(`https://notesapp-3qhd.onrender.com/notes/${id}`, updatedNote);
       setNotes(notes.map(note => note._id === id ? response.data : note));
       setIsEditingNote(null);
       setNoteTitle('');
@@ -82,7 +82,7 @@ const Dashboard = ({ user }) => {
 
   const handleDeleteClick = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/notes/${id}`);
+      await axios.delete(`https://notesapp-3qhd.onrender.com/notes/${id}`);
       setNotes(notes.filter(note => note._id !== id));
     } catch (error) {
       console.error("Error deleting note:", error);
