@@ -20,7 +20,7 @@ const Navbar = () => {
 
   const fetchUserName = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/getUsers/${userId}`);
+      const response = await axios.get(`https://notesapp-3qhd.onrender.com/getUsers/${userId}`);
       const user = response.data;
       setUserName(user ? user.name : 'Unknown User');
     } catch (error) {
