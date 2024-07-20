@@ -19,7 +19,7 @@ const Signup = () => {
     console.log("Submitting form with data:", formData);
 
     try {
-      const response = await axios.post('http://localhost:8000/signup', formData);
+      const response = await axios.post('https://notesapp-3qhd.onrender.com/signup', formData);
       console.log(response.data);
       alert('User registered successfully');
       navigate('/login');
