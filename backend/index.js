@@ -11,7 +11,7 @@ const MONGO_LOCALHOST = process.env.MONGO_LOCALHOST;
 const UI_PORT = process.env.UI_PORT || 5173;
 
 app.use(cors({
-  origin: `https://notesapp-frontend-e0a1.onrender.com/`,
+  origin: `https://notesapp-frontend-e0a1.onrender.com`,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
