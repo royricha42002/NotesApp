@@ -5,9 +5,9 @@ This project is a full-stack application for taking and managing notes. It inclu
 
 
 
-## DEMO
+## LIVE LINK
 
-https://www.kapwing.com/videos/666fcff21fe63070a7587a9a
+https://notesapp-frontend-e0a1.onrender.com
 
 ## TABLE OF CONTENT
 
